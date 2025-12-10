@@ -18,6 +18,10 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # pin@v3
 
+      - name: Install dependencies
+        run: |
+          sudo apt install -y libomp-dev
+
       - name: "Run `bazel build`"
         run: |
           cd examples/hello_world

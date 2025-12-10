@@ -24,6 +24,10 @@ toolchain_type(
                 cpu = platform.cpu,
                 os = platform.os,
             ),
+            heir_translate = "@heir_{os}_{cpu}//:heir-translate".format(
+                cpu = platform.cpu,
+                os = platform.os,
+            ),
             visibility = ["//visibility:public"],
         ),
 

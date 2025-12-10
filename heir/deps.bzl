@@ -12,6 +12,8 @@ def heir_repos():
             # this defines the name we use in BUILD.bazel to point to the
             # heir-opt binary for the toolchain
             name = "heir_%s_%s" % (platform.os, platform.cpu),
-            sha256 = platform.sha256,
-            url = platform.url,
+            heir_opt_sha256 = platform.heir_opt_sha256,
+            heir_opt_url = platform.heir_opt_url,
+            heir_translate_sha256 = platform.heir_translate_sha256,
+            heir_translate_url = platform.heir_translate_url,
         )

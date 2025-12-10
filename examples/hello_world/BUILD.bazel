@@ -1,4 +1,5 @@
 load("@rules_heir//heir:heir_opt.bzl", "heir_opt")
+load("@rules_heir//heir:heir_translate.bzl", "heir_translate")
 
 heir_opt(
     name = "hello_world",
@@ -6,7 +7,16 @@ heir_opt(
     generated_filename = "hello_world.opt.mlir",
     passes = [
         "--annotate-module=backend=openfhe scheme=bgv",
-        "--mlir-to-bgv=ciphertext-degree=8192 annotate-noise-bound=true",
-        "--scheme-to-openfhe=insert-debug-handler-calls=true",
+        "--mlir-to-bgv=ciphertext-degree=8192",
+        "--scheme-to-openfhe",
+    ],
+)
+
+heir_translate(
+    name = "hello_world_translate",
+    src = ":hello_world.opt.mlir",
+    generated_filename = "hello_world.inc.cc",
+    passes = [
+        "--emit-openfhe-pke",
     ],
 )

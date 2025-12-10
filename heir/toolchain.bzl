@@ -4,6 +4,7 @@ HeirInfo = provider(
     doc = "Information about how to invoke heir binaries.",
     fields = {
         "heir_opt_path": "File: A label which points to the heir-opt binary",
+        "heir_translate_path": "File: A label which points to the heir-translate binary",
     },
 )
 
@@ -17,6 +18,7 @@ def _heir_toolchain_impl(ctx):
         name = ctx.label.name,
         heir_info = HeirInfo(
             heir_opt_path = ctx.file.heir_opt,
+            heir_translate_path = ctx.file.heir_translate,
         ),
     )
     return [toolchain_info]
@@ -25,6 +27,11 @@ heir_toolchain = rule(
     implementation = _heir_toolchain_impl,
     attrs = {
         "heir_opt": attr.label(
+            mandatory = True,
+            allow_single_file = True,
+            cfg = "exec",
+        ),
+        "heir_translate": attr.label(
             mandatory = True,
             allow_single_file = True,
             cfg = "exec",

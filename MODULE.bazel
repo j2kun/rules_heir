@@ -2,3 +2,15 @@ module(
     name = "rules_heir",
     version = "0.0.1",
 )
+
+bazel_dep(name = "platforms", version = "1.0.0")
+
+repos = use_extension("@rules_heir//heir:extensions.bzl", "heir_repositories")
+use_repo(
+    repos,
+    "heir_linux_x86_64",
+)
+
+register_toolchains(
+    "@rules_heir//heir:heir_linux_x86_64_toolchain",
+)

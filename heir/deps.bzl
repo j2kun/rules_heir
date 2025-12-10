@@ -9,19 +9,9 @@ heir_download = _heir_download
 def heir_repos():
     for platform in PLATFORMS:
         heir_download(
+            # this defines the name we use in BUILD.bazel to point to the
+            # heir-opt binary for the toolchain
             name = "heir_%s_%s" % (platform.os, platform.cpu),
             sha256 = platform.sha256,
             url = platform.url,
-        )
-
-def heir_register_toolchains():
-    """Register the relocatable heir toolchains."""
-    heir_repos()
-
-    for platform in PLATFORMS:
-        native.register_toolchains(
-            "@rules_heir//heir:heir_{os}_{cpu}_toolchain".format(
-                os = platform.os,
-                cpu = platform.cpu,
-            ),
         )

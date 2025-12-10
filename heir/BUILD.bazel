@@ -18,6 +18,12 @@ toolchain_type(
                 cpu = platform.cpu,
                 os = platform.os,
             ),
+            # The name of this target is defined in deps.bzl when invoking
+            # heir_download
+            heir_opt = "@heir_{os}_{cpu}//:heir-opt".format(
+                cpu = platform.cpu,
+                os = platform.os,
+            ),
             visibility = ["//visibility:public"],
         ),
 

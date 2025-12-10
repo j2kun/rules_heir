@@ -1,0 +1,12 @@
+load("@rules_heir//heir:heir_opt.bzl", "heir_opt")
+
+heir_opt(
+    name = "hello_world",
+    src = "hello_world.mlir",
+    generated_filename = "hello_world.opt.mlir",
+    passes = [
+        "--annotate-module=backend=openfhe scheme=bgv",
+        "--mlir-to-bgv=ciphertext-degree=8192 annotate-noise-bound=true",
+        "--scheme-to-openfhe=insert-debug-handler-calls=true",
+    ],
+)

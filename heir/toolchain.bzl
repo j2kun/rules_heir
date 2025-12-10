@@ -13,9 +13,8 @@ def _heir_toolchain_impl(ctx):
     And wraps it in a platform_common.ToolchainInfo.
     """
 
-    # We wrap our language-specific provider (HeirInfo) inside the
-    # generic ToolchainInfo provider. This is required by Bazel's resolution engine.
     toolchain_info = platform_common.ToolchainInfo(
+        name = ctx.label.name,
         heir_info = HeirInfo(
             heir_opt_path = ctx.file.heir_opt,
         ),

@@ -1,0 +1,32 @@
+name: Test
+permissions: read-all
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+jobs:
+  build-and-test:
+    runs-on:
+      labels: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # pin@v3
+
+      - name: "Run `bazel build`"
+        run: |
+          cd examples/hello_world
+          bazel build //...
+
+          EXPECTED_FILE="bazel-bin/hello_world.inc.cc"
+          if [[ ! -f "$EXPECTED_FILE" ]]; then
+            echo "Error: File '$EXPECTED_FILE' not found." >&2
+            exit 1
+          fi
+
+          echo "File '$EXPECTED_FILE' successfully generated."

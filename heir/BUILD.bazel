@@ -1,0 +1,42 @@
+load(":platforms.bzl", "PLATFORMS")
+load(":toolchain.bzl", "heir_toolchain")
+
+# toolchain_type defines a name for a kind of toolchain. Our toolchains declare
+# that they have this type. Our rules request a toolchain of this type. Bazel
+# selects a toolchain of the correct type that satisfies platform constraints
+# from among registered toolchains.
+toolchain_type(
+    name = "toolchain_type",
+    visibility = ["//visibility:public"],
+)
+
+[
+    (
+        # toolchain_impl gathers information about the HEIR toolchain.
+        heir_toolchain(
+            name = "heir_{os}_{cpu}_toolchain_impl".format(
+                cpu = platform.cpu,
+                os = platform.os,
+            ),
+            visibility = ["//visibility:public"],
+        ),
+
+        # toolchain is a Bazel toolchain that expresses execution and target
+        # constraints for toolchain_impl. This target should be registered by
+        # calling register_toolchains in MODULE.bazel.
+        toolchain(
+            name = "heir_{os}_{cpu}_toolchain".format(
+                cpu = platform.cpu,
+                os = platform.os,
+            ),
+            exec_compatible_with = platform.exec_compatible_with,
+            toolchain = ":heir_{os}_{cpu}_toolchain_impl".format(
+                cpu = platform.cpu,
+                os = platform.os,
+            ),
+            toolchain_type = ":toolchain_type",
+            visibility = ["//visibility:public"],
+        ),
+    )
+    for platform in PLATFORMS
+]

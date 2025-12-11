@@ -34,3 +34,8 @@ jobs:
           fi
 
           echo "File '$EXPECTED_FILE' successfully generated."
+
+      - name: "Run `bazel test`"
+        run: |
+          cd examples/hello_world
+          bazel build test //...

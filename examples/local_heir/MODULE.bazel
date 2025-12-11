@@ -1,7 +1,4 @@
-module(
-    name = "hello_world",
-    version = "0.0.0",
-)
+module(name = "hello_world")
 
 bazel_dep(name = "rules_heir", version = "0.0.1")
 local_path_override(

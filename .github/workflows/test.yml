@@ -22,10 +22,6 @@ jobs:
         run: |
           ./.github/install_clang_version.sh 19
 
-      - name: Install dependencies
-        run: |
-          sudo apt install -y libomp-dev
-
       - name: "Run `bazel build`"
         run: |
           cd examples/hello_world

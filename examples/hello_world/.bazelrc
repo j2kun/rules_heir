@@ -1,0 +1,8 @@
+common --action_env=BAZEL_CXXOPTS=-std=c++20
+common --cxxopt='-std=c++20'
+common --copt=-fdiagnostics-color=always
+common --test_output=errors
+common --test_summary=terse
+common -c opt
+common --enable_bzlmod
+common --enable_workspace

@@ -20,6 +20,10 @@ jobs:
 
       - name: Install dependencies
         run: |
+          ./.github/install_clang_version.sh 19
+
+      - name: Install dependencies
+        run: |
           sudo apt install -y libomp-dev
 
       - name: "Run `bazel build`"

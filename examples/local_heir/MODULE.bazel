@@ -14,3 +14,13 @@ bazel_dep(name = "googletest", version = "1.17.0")
 
 # openfhe deps
 bazel_dep(name = "rapidjson", version = "1.1.0.bcr.20250205")
+
+ext = use_extension("@rules_heir//heir:extensions.bzl", "local_heir_repositories")
+
+# path to the directory containing heir-opt and heir-translate
+ext.config(path = "/usr/local/google/home/jkun/fhe/heir/bazel-bin/tools")
+use_repo(ext, "heir_local")
+
+register_toolchains(
+    "@heir_local//:heir_local_toolchain",
+)

@@ -18,14 +18,21 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # pin@v3
 
+      - name: Setup Bazel
+        uses: bazel-contrib/setup-bazel@0.19.0
+        with:
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
+
       - name: Install dependencies
         run: |
           ./.github/install_clang_version.sh 19
 
-      - name: "Run `bazel build`"
+      - name: "Run `bazelisk build`"
         run: |
           cd examples/hello_world
-          bazel build //...
+          bazelisk build //...
 
           EXPECTED_FILE="bazel-bin/hello_world.inc.cc"
           if [[ ! -f "$EXPECTED_FILE" ]]; then
@@ -35,7 +42,7 @@ jobs:
 
           echo "File '$EXPECTED_FILE' successfully generated."
 
-      - name: "Run `bazel test`"
+      - name: "Run `bazelisk test`"
         run: |
           cd examples/hello_world
-          bazel test //...
+          bazelisk test //...

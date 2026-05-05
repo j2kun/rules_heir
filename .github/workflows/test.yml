@@ -29,7 +29,11 @@ jobs:
         run: |
           ./.github/install_clang_version.sh 19
 
-      - name: "Run `bazelisk build`"
+      - name: "Run analysis tests"
+        run: |
+          bazelisk test //heir/...
+
+      - name: "Build integration tests"
         run: |
           cd examples/hello_world
           bazelisk build //...
@@ -42,7 +46,7 @@ jobs:
 
           echo "File '$EXPECTED_FILE' successfully generated."
 
-      - name: "Run `bazelisk test`"
+      - name: "Run integration tests"
         run: |
           cd examples/hello_world
           bazelisk test //...

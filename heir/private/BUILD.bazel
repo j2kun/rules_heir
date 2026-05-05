@@ -1,2 +1,4 @@
-# Empty file
+load(":heir_opt_test.bzl", "test_heir_opt")
+
+test_heir_opt()
 

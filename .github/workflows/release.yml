@@ -47,6 +47,19 @@ jobs:
           TAG_NAME="${{ steps.get_tag.outputs.TAG }}"
           git archive --format=tar.gz --prefix=rules_heir-${TAG_NAME}/ ${{ github.sha }} -o rules_heir-${TAG_NAME}.tar.gz
 
+      - name: Ensure Tag Exists
+        run: |
+          TAG_NAME="${{ steps.get_tag.outputs.TAG }}"
+          if [ -z "$(git ls-remote --tags origin "$TAG_NAME")" ]; then
+            echo "Tag $TAG_NAME does not exist on remote. Creating it..."
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git tag "$TAG_NAME" ${{ github.sha }}
+            git push origin "$TAG_NAME"
+          else
+            echo "Tag $TAG_NAME already exists on remote."
+          fi
+
       - name: Create Release
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
         with:

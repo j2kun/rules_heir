@@ -33,20 +33,30 @@ jobs:
         run: |
           bazelisk test //heir/...
 
-      - name: "Build integration tests"
+      - name: "Run OpenFHE integration tests"
         run: |
-          cd examples/hello_world
+          cd examples/openfhe
           bazelisk build //...
 
-          EXPECTED_FILE="bazel-bin/hello_world.inc.cc"
+          EXPECTED_FILE="bazel-bin/hello_world_lib.inc.cc"
           if [[ ! -f "$EXPECTED_FILE" ]]; then
             echo "Error: File '$EXPECTED_FILE' not found." >&2
             exit 1
           fi
 
           echo "File '$EXPECTED_FILE' successfully generated."
+          bazelisk test //...
 
-      - name: "Run integration tests"
+      - name: "Run Lattigo integration tests"
         run: |
-          cd examples/hello_world
+          cd examples/lattigo
+          bazelisk build //...
+
+          EXPECTED_FILE="bazel-bin/helloworld_lib.go"
+          if [[ ! -f "$EXPECTED_FILE" ]]; then
+            echo "Error: File '$EXPECTED_FILE' not found." >&2
+            exit 1
+          fi
+
+          echo "File '$EXPECTED_FILE' successfully generated."
           bazelisk test //...

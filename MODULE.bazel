@@ -8,9 +8,12 @@ bazel_dep(name = "platforms", version = "1.0.0")
 bazel_dep(name = "rules_cc", version = "0.2.18")
 
 # hermetic LLVM toolchain (for C++ compiler and linker)
-bazel_dep(name = "llvm", version = "0.7.8")
+bazel_dep(name = "llvm", version = "0.7.8", dev_dependency = True)
 
-register_toolchains("@llvm//:all")
+register_toolchains(
+    "@llvm//:all",
+    dev_dependency = True,
+)
 
 repos = use_extension("@rules_heir//heir:extensions.bzl", "heir_repositories")
 use_repo(

@@ -45,7 +45,7 @@ jobs:
       - name: Create Stable Archive
         run: |
           TAG_NAME="${{ steps.get_tag.outputs.TAG }}"
-          git archive --format=tar.gz --prefix=rules_heir-${TAG_NAME}/ ${TAG_NAME} -o rules_heir-${TAG_NAME}.tar.gz
+          git archive --format=tar.gz --prefix=rules_heir-${TAG_NAME}/ ${{ github.sha }} -o rules_heir-${TAG_NAME}.tar.gz
 
       - name: Create Release
         uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0

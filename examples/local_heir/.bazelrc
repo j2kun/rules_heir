@@ -4,8 +4,6 @@ common --copt=-fdiagnostics-color=always
 common --test_output=errors
 common --test_summary=terse
 common -c opt
-common --enable_bzlmod
-common --enable_workspace
 
 # compile with clang on all platforms
 build --action_env=CC=clang
@@ -15,4 +13,3 @@ build --host_action_env=CXX=clang++
 
 # linux-specific options
 build --linkopt="-fuse-ld=lld"
-

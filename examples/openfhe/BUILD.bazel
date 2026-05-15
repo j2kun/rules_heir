@@ -1,0 +1,27 @@
+load("@rules_cc//cc:cc_test.bzl", "cc_test")
+load("@rules_heir//heir:openfhe.bzl", "OPENFHE_LINKOPTS", "OPENMP_COPTS", "heir_openfhe_lib")
+
+heir_openfhe_lib(
+    name = "hello_world",
+    cc_lib_target_name = "hello_world_cc_lib",
+    generated_lib_header = "hello_world.inc.h",
+    heir_opt_flags = [
+        "--annotate-module=backend=openfhe scheme=bgv",
+        "--mlir-to-bgv=ciphertext-degree=8192",
+        "--scheme-to-openfhe",
+    ],
+    mlir_src = "hello_world.mlir",
+)
+
+cc_test(
+    name = "hello_world_test",
+    srcs = ["hello_world_test.cc"],
+    copts = OPENMP_COPTS,
+    linkopts = OPENFHE_LINKOPTS,
+    deps = [
+        ":hello_world_cc_lib",
+        "@googletest//:gtest_main",
+        "@openfhe//:core",
+        "@openfhe//:pke",
+    ],
+)

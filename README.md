@@ -7,7 +7,7 @@ Bazel rules for the [HEIR](https://github.com/google/heir) compiler.
 Add the following to your `MODULE.bazel`:
 
 ```starlark
-bazel_dep(name = "rules_heir", version = "0.0.2")
+bazel_dep(name = "rules_heir", version = "0.0.4")
 ```
 
 ## Usage
@@ -41,6 +41,13 @@ heir_translate(
     generated_filename = "output.cc",
 )
 ```
+
+## OpenFHE and Lattigo macros
+
+The files `heir/openfhe.bzl` and `heir/lattigo.bzl` contain macros that make it
+easier to integrate HEIR outputs with OpenFHE and Lattigo. The examples
+directory `examples/openfhe` and `examples/lattigo` show usage and the macros
+themselves have docstrings for detailed options.
 
 ## Using Local HEIR Binaries
 

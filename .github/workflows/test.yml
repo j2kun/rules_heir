@@ -25,10 +25,6 @@ jobs:
           disk-cache: ${{ github.workflow }}
           repository-cache: true
 
-      - name: Install dependencies
-        run: |
-          ./.github/install_clang_version.sh 19
-
       - name: "Run analysis tests"
         run: |
           bazelisk test //heir/...

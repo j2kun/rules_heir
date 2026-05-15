@@ -1,0 +1,56 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag name (e.g., v0.0.5)'
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Determine Tag Name
+        id: get_tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "TAG=${{ github.event.inputs.tag }}" >> $GITHUB_OUTPUT
+          else
+            echo "TAG=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Verify Version in MODULE.bazel
+        run: |
+          TAG_NAME="${{ steps.get_tag.outputs.TAG }}"
+          # Strip leading 'v' if present
+          VERSION="${TAG_NAME#v}"
+          echo "Checking if MODULE.bazel contains version: $VERSION"
+          if ! grep -E 'version\s*=\s*"'${VERSION}'"' MODULE.bazel; then
+            echo "ERROR: Version in MODULE.bazel does not match tag $TAG_NAME (expected $VERSION)"
+            exit 1
+          fi
+
+      - name: Create Stable Archive
+        run: |
+          TAG_NAME="${{ steps.get_tag.outputs.TAG }}"
+          git archive --format=tar.gz --prefix=rules_heir-${TAG_NAME}/ ${TAG_NAME} -o rules_heir-${TAG_NAME}.tar.gz
+
+      - name: Create Release
+        uses: softprops/action-gh-release@a06a81a03ee405af7f2048a818ed3f03bbf83c7b # v2.5.0
+        with:
+          tag_name: ${{ steps.get_tag.outputs.TAG }}
+          files: rules_heir-${{ steps.get_tag.outputs.TAG }}.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

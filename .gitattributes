@@ -1,0 +1,4 @@
+.github export-ignore
+.gitignore export-ignore
+.pre-commit-config.yaml export-ignore
+.jetskicli export-ignore

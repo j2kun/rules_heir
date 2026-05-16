@@ -15,8 +15,10 @@ repos = use_extension("@rules_heir//heir:extensions.bzl", "heir_repositories")
 use_repo(
     repos,
     "heir_linux_x86_64",
+    "heir_macos_arm64",
+    "heir_linux_aarch64",
 )
 
 register_toolchains(
-    "@rules_heir//heir:heir_linux_x86_64_toolchain",
+    "@rules_heir//heir:all",
 )

@@ -32,7 +32,37 @@ def _heir_translate_download(ctx):
             executable = True,
         )
 
+def _version_ge(v1, v2):
+    """Returns True if v1 >= v2."""
+    p1 = [int(x) for x in v1.split(".")]
+    p2 = [int(x) for x in v2.split(".")]
+    
+    for i in range(min(len(p1), len(p2))):
+        if p1[i] > p2[i]:
+            return True
+        if p1[i] < p2[i]:
+            return False
+            
+    return len(p1) >= len(p2)
+
+def _check_glibc(ctx):
+    # Only check glibc on Linux hosts
+    if ctx.os.name != "linux":
+        return
+
+    # Get the glibc version using getconf
+    res = ctx.execute(["getconf", "GNU_LIBC_VERSION"])
+    if res.return_code != 0:
+        fail("Could not determine glibc version via getconf")
+
+    # Output is usually "glibc 2.35", we want the version number
+    version_str = res.stdout.strip().split(" ")[-1]
+    
+    if not _version_ge(version_str, "2.28"):
+        fail("HEIR requires glibc >= 2.28, but found %s" % version_str)
+
 def _heir_download_impl(ctx):
+    _check_glibc(ctx)
     _heir_opt_download(ctx)
     _heir_translate_download(ctx)
 

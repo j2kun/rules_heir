@@ -1,63 +1,20 @@
-load("@hello_world//bazel/openfhe:copts.bzl", "OPENFHE_LINKOPTS", "OPENMP_COPTS")
-load("@rules_cc//cc:cc_test.bzl", "cc_test")
-load("@rules_heir//heir:heir_opt.bzl", "heir_opt")
-load("@rules_heir//heir:heir_translate.bzl", "heir_translate")
+load("@rules_go//go:def.bzl", "go_test")
+load("@rules_heir//heir:lattigo.bzl", "heir_lattigo_lib")
 
-heir_opt(
+heir_lattigo_lib(
     name = "hello_world",
-    src = "hello_world.mlir",
-    generated_filename = "hello_world.opt.mlir",
-    passes = [
-        "--annotate-module=backend=openfhe scheme=bgv",
-        "--mlir-to-bgv=ciphertext-degree=8192",
-        "--scheme-to-openfhe",
+    go_library_name = "helloworld",
+    heir_opt_flags = [
+        "--annotate-module=backend=lattigo scheme=ckks",
+        "--mlir-to-ckks=ciphertext-degree=2048 first-mod-bits=0",
+        "--scheme-to-lattigo",
     ],
+    mlir_src = "hello_world.mlir",
+    split_preprocessing = False,
 )
 
-heir_translate(
-    name = "hello_world_translate_cc",
-    src = ":hello_world.opt.mlir",
-    generated_filename = "hello_world.inc.cc",
-    passes = [
-        "--emit-openfhe-pke",
-        # required with bazel, since bazel clones and builds openfhe from source
-        "--openfhe-include-type=source-relative",
-    ],
-)
-
-heir_translate(
-    name = "hello_world_translate_h",
-    src = ":hello_world.opt.mlir",
-    generated_filename = "hello_world.inc.h",
-    passes = [
-        "--emit-openfhe-pke-header",
-        "--openfhe-include-type=source-relative",
-    ],
-)
-
-cc_library(
-    name = "hello_world_cc_lib",
-    srcs = ["hello_world.inc.cc"],
-    hdrs = ["hello_world.inc.h"],
-    # Remove copts and linkopts if you want to run OpenFHE without openmp
-    copts = OPENMP_COPTS,
-    linkopts = OPENFHE_LINKOPTS,
-    deps = [
-        ":hello_world_translate_cc",
-        ":hello_world_translate_h",
-        "@openfhe//:pke",
-    ],
-)
-
-cc_test(
+go_test(
     name = "hello_world_test",
-    srcs = ["hello_world_test.cc"],
-    copts = OPENMP_COPTS,
-    linkopts = OPENFHE_LINKOPTS,
-    deps = [
-        ":hello_world_cc_lib",
-        "@googletest//:gtest_main",
-        "@openfhe//:core",
-        "@openfhe//:pke",
-    ],
+    srcs = ["hello_world_test.go"],
+    embed = [":helloworld"],
 )

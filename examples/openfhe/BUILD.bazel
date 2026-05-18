@@ -16,8 +16,16 @@ heir_openfhe_lib(
 cc_test(
     name = "hello_world_test",
     srcs = ["hello_world_test.cc"],
-    copts = OPENMP_COPTS,
-    linkopts = OPENFHE_LINKOPTS,
+    copts = select({
+        "@platforms//os:linux": OPENMP_COPTS,
+        "@platforms//os:macos": [],
+        "//conditions:default": OPENMP_COPTS,
+    }),
+    linkopts = select({
+        "@platforms//os:linux": OPENFHE_LINKOPTS,
+        "@platforms//os:macos": [],
+        "//conditions:default": OPENFHE_LINKOPTS,
+    }),
     deps = [
         ":hello_world_cc_lib",
         "@googletest//:gtest_main",

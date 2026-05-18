@@ -12,8 +12,11 @@ concurrency:
   cancel-in-progress: true
 jobs:
   build-and-test:
-    runs-on:
-      labels: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-14, ubuntu-24.04-arm]
     steps:
       - name: Check out repository code
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # pin@v3
@@ -26,6 +29,7 @@ jobs:
           repository-cache: true
 
       - name: Install dependencies
+        if: runner.os == 'Linux'
         run: |
           ./.github/install_clang_version.sh 19
 
@@ -34,9 +38,11 @@ jobs:
           bazelisk test //heir/...
 
       - name: "Run OpenFHE integration tests"
+        env:
+          OPENFHE_FLAGS: ${{ runner.os == 'macOS' && '--@openfhe//:enable_openmp=False' || '' }}
         run: |
           cd examples/openfhe
-          bazelisk build //...
+          bazelisk build //... $OPENFHE_FLAGS
 
           EXPECTED_FILE="bazel-bin/hello_world_lib.inc.cc"
           if [[ ! -f "$EXPECTED_FILE" ]]; then
@@ -45,7 +51,7 @@ jobs:
           fi
 
           echo "File '$EXPECTED_FILE' successfully generated."
-          bazelisk test //...
+          bazelisk test //... $OPENFHE_FLAGS
 
       - name: "Run Lattigo integration tests"
         run: |

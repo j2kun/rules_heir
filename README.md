@@ -7,8 +7,17 @@ Bazel rules for the [HEIR](https://github.com/google/heir) compiler.
 Add the following to your `MODULE.bazel`:
 
 ```starlark
-bazel_dep(name = "rules_heir", version = "0.0.4")
+bazel_dep(name = "rules_heir", version = "0.0.5")
 ```
+
+## Supported Platforms
+
+`rules_heir` fetches pre-built binaries for the following platforms:
+- Linux x86_64 (requires glibc >= 2.28)
+- Linux aarch64 (requires glibc >= 2.28)
+- macOS arm64
+
+If your platform is not supported or doesn't meet the requirements, you will see an error during dependency fetching. In that case, you can use local binaries as described below.
 
 ## Usage
 

@@ -38,9 +38,11 @@ jobs:
           bazelisk test //heir/...
 
       - name: "Run OpenFHE integration tests"
+        env:
+          OPENFHE_FLAGS: ${{ runner.os == 'macOS' && '--@openfhe//:enable_openmp=False' || '' }}
         run: |
           cd examples/openfhe
-          bazelisk build //...
+          bazelisk build //... $OPENFHE_FLAGS
 
           EXPECTED_FILE="bazel-bin/hello_world_lib.inc.cc"
           if [[ ! -f "$EXPECTED_FILE" ]]; then
@@ -49,7 +51,7 @@ jobs:
           fi
 
           echo "File '$EXPECTED_FILE' successfully generated."
-          bazelisk test //...
+          bazelisk test //... $OPENFHE_FLAGS
 
       - name: "Run Lattigo integration tests"
         run: |

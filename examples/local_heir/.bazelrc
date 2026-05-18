@@ -1,3 +1,4 @@
+common --enable_platform_specific_config
 common --action_env=BAZEL_CXXOPTS=-std=c++20
 common --cxxopt='-std=c++20'
 common --copt=-fdiagnostics-color=always

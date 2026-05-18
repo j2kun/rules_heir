@@ -34,8 +34,8 @@ def heir_openfhe_lib(
         data = [],
         tags = [],
         deps = [],
-        cc_lib_copts = OPENFHE_COPTS + OPENMP_COPTS,
-        cc_lib_linkopts = OPENFHE_LINKOPTS,
+        cc_lib_copts = None,
+        cc_lib_linkopts = None,
         generate_debug_helper = False,
         **kwargs):
     """A rule for running HEIR to generate an OpenFHE C++ library.
@@ -80,6 +80,19 @@ def heir_openfhe_lib(
       generate_debug_helper: Flag for generating default debug helper code,
       **kwargs: Keyword arguments to pass to cc_library and cc_test.
     """
+    if cc_lib_copts == None:
+        cc_lib_copts = OPENFHE_COPTS + select({
+            "@platforms//os:linux": OPENMP_COPTS,
+            "@platforms//os:macos": [],
+            "//conditions:default": OPENMP_COPTS,
+        })
+    if cc_lib_linkopts == None:
+        cc_lib_linkopts = select({
+            "@platforms//os:linux": OPENFHE_LINKOPTS,
+            "@platforms//os:macos": [],
+            "//conditions:default": OPENFHE_LINKOPTS,
+        })
+
     cc_codegen_target = name + ".heir_translate_cc"
     h_codegen_target = name + ".heir_translate_h"
     pybind_codegen_target = name + ".heir_translate_pybind"

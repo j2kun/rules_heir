@@ -9,12 +9,14 @@ def _heir_opt_download(ctx):
     else:
         if not ctx.attr.heir_opt_url:
             fail("Either 'heir_opt_local_path' or 'heir_opt_heir_opt_url' must be specified for heir_repository.")
-        ctx.download(
-            url = ctx.attr.heir_opt_url,
-            output = binary_name,
-            sha256 = ctx.attr.heir_opt_sha256,
-            executable = True,
-        )
+        download_args = {
+            "url": ctx.attr.heir_opt_url,
+            "output": binary_name,
+            "executable": True,
+        }
+        if ctx.attr.heir_opt_sha256:
+            download_args["sha256"] = ctx.attr.heir_opt_sha256
+        ctx.download(**download_args)
 
 def _heir_translate_download(ctx):
     ctx.report_progress("Downloading heir-translate")
@@ -25,12 +27,14 @@ def _heir_translate_download(ctx):
     else:
         if not ctx.attr.heir_translate_url:
             fail("Either 'heir_translate_local_path' or 'heir_translate_heir_translate_url' must be specified for heir_repository.")
-        ctx.download(
-            url = ctx.attr.heir_translate_url,
-            output = binary_name,
-            sha256 = ctx.attr.heir_translate_sha256,
-            executable = True,
-        )
+        download_args = {
+            "url": ctx.attr.heir_translate_url,
+            "output": binary_name,
+            "executable": True,
+        }
+        if ctx.attr.heir_translate_sha256:
+            download_args["sha256"] = ctx.attr.heir_translate_sha256
+        ctx.download(**download_args)
 
 def _version_ge(v1, v2):
     """Returns True if v1 >= v2."""

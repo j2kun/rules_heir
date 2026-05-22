@@ -73,3 +73,32 @@ register_toolchains(
     "@heir_local//:heir_local_toolchain",
 )
 ```
+
+## Using Nightly HEIR Binaries
+
+If you want to use the latest nightly builds of HEIR instead of the pinned release binaries, you can opt-in by configuring the `heir_repositories` extension in your `MODULE.bazel`.
+
+See [examples/nightly](file:///usr/local/google/home/jkun/fhe/rules_heir/examples/nightly) for a working example.
+
+Briefly, you need to configure the extension as follows:
+
+```starlark
+heir_repos = use_extension("@rules_heir//heir:extensions.bzl", "heir_repositories")
+heir_repos.config(nightly = True)
+use_repo(
+    heir_repos,
+    "heir_linux_x86_64",
+    "heir_macos_arm64",
+    "heir_linux_aarch64",
+)
+```
+
+**Note on Caching:** Bazel caches external repositories. Because the nightly URL remains the same (`.../download/nightly/...`), Bazel will not automatically detect updates to the nightly binaries. To force Bazel to fetch the latest nightly binary, you must run:
+
+```bash
+bazel clean --expunge
+```
+or manually delete the corresponding repository from your Bazel external cache.
+
+
+```

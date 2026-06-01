@@ -1,4 +1,5 @@
 load(":heir_opt_test.bzl", "test_heir_opt")
+load(":urls_test.bzl", "test_urls")
 
 test_heir_opt()
-
+test_urls()

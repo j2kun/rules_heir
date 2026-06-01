@@ -4,10 +4,10 @@ PLATFORMS = [
     struct(
         os = "linux",
         cpu = "x86_64",
-        heir_opt_url = "https://github.com/google/heir/releases/download/v2026.05.18/heir-opt-manylinux_2_28_x86_64",
-        heir_opt_sha256 = "9ca21e4263d2141398ce65238e5b984c1a8c9d41bd7eb186f048055e9626365b",
-        heir_translate_url = "https://github.com/google/heir/releases/download/v2026.05.18/heir-translate-manylinux_2_28_x86_64",
-        heir_translate_sha256 = "5fd90b5b4c8c1ac7019fe41c430afa02426e6f3550293190ba5efc15ece2d315",
+        heir_opt_url = "https://github.com/google/heir/releases/download/v2026.06.01/heir-opt-manylinux_2_28_x86_64",
+        heir_opt_sha256 = "be6a00452f5e214b450d1aa6f44c8589c99078873e2c92fef3de43af6ebbd5cb",
+        heir_translate_url = "https://github.com/google/heir/releases/download/v2026.06.01/heir-translate-manylinux_2_28_x86_64",
+        heir_translate_sha256 = "804af0215142c4e82e98996eb0dba2d8b8800badd28ae2c514dd20e86b190307",
         exec_compatible_with = [
             "@platforms//os:linux",
             "@platforms//cpu:x86_64",
@@ -16,10 +16,10 @@ PLATFORMS = [
     struct(
         os = "macos",
         cpu = "arm64",
-        heir_opt_url = "https://github.com/google/heir/releases/download/v2026.05.18/heir-opt-macosx_11_0_arm64",
-        heir_opt_sha256 = "48369c2731e68e6d8a69462dc30baa82b18588d040559d2ca1ae13f3e03c9bb5",
-        heir_translate_url = "https://github.com/google/heir/releases/download/v2026.05.18/heir-translate-macosx_11_0_arm64",
-        heir_translate_sha256 = "1ff77a23c8022ddb181cd3d38f38d706b1949503e76e7fa5524d9946ae115d37",
+        heir_opt_url = "https://github.com/google/heir/releases/download/v2026.06.01/heir-opt-macosx_11_0_arm64",
+        heir_opt_sha256 = "0edeec2ce1ce7c0124813d948428eb1ce85d24eb89cd255790cf4613f7f22ae5",
+        heir_translate_url = "https://github.com/google/heir/releases/download/v2026.06.01/heir-translate-macosx_11_0_arm64",
+        heir_translate_sha256 = "147d9280014e18c706e0df1f5b1e2ae0b2f816deba195556e019c42cf51ca13a",
         exec_compatible_with = [
             "@platforms//os:macos",
             "@platforms//cpu:aarch64",
@@ -28,10 +28,10 @@ PLATFORMS = [
     struct(
         os = "linux",
         cpu = "aarch64",
-        heir_opt_url = "https://github.com/google/heir/releases/download/v2026.05.18/heir-opt-manylinux_2_28_aarch64",
-        heir_opt_sha256 = "911d52a81cd770541a98e98e309f365038273dbd3161baa90775d40cfcf8eba2",
-        heir_translate_url = "https://github.com/google/heir/releases/download/v2026.05.18/heir-translate-manylinux_2_28_aarch64",
-        heir_translate_sha256 = "288a30a70ed6f4f7b09c6b47bccf1d55feead3db5132bb57e92dc460b4f9f639",
+        heir_opt_url = "https://github.com/google/heir/releases/download/v2026.06.01/heir-opt-manylinux_2_28_aarch64",
+        heir_opt_sha256 = "3e54235d66ca614b21e3754019484bb4e45cad55465ee0d8fcb391cb05af4920",
+        heir_translate_url = "https://github.com/google/heir/releases/download/v2026.06.01/heir-translate-manylinux_2_28_aarch64",
+        heir_translate_sha256 = "fbf019bf584ac223f7ea98b535cadaf8b40ddb468bdd8427ee963f399d25a262",
         exec_compatible_with = [
             "@platforms//os:linux",
             "@platforms//cpu:aarch64",

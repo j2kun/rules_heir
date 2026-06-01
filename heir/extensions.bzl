@@ -5,28 +5,56 @@ load(":local_repo.bzl", "local_heir")
 load(":platforms.bzl", "PLATFORMS")
 load(":repo.bzl", "heir_download")
 
-def heir_repos():
+def make_nightly_url(url):
+    parts = url.split("/download/")
+    if len(parts) != 2:
+        fail("Unexpected URL format: " + url)
+    subparts = parts[1].split("/")
+    if len(subparts) < 2:
+        fail("Unexpected URL format: " + url)
+    return parts[0] + "/download/nightly/" + subparts[-1]
+
+def heir_repos(nightly = False):
     for platform in PLATFORMS:
+        url_opt = platform.heir_opt_url
+        url_translate = platform.heir_translate_url
+        sha_opt = platform.heir_opt_sha256
+        sha_translate = platform.heir_translate_sha256
+
+        if nightly:
+            url_opt = make_nightly_url(url_opt)
+            url_translate = make_nightly_url(url_translate)
+            sha_opt = ""
+            sha_translate = ""
+
         heir_download(
             # this defines the name we use in BUILD.bazel to point to the
             # heir-opt binary for the toolchain
             name = "heir_%s_%s" % (platform.os, platform.cpu),
-            heir_opt_sha256 = platform.heir_opt_sha256,
-            heir_opt_url = platform.heir_opt_url,
-            heir_translate_sha256 = platform.heir_translate_sha256,
-            heir_translate_url = platform.heir_translate_url,
+            heir_opt_sha256 = sha_opt,
+            heir_opt_url = url_opt,
+            heir_translate_sha256 = sha_translate,
+            heir_translate_url = url_translate,
         )
 
+heir_config = tag_class(attrs = {"nightly": attr.bool(default = False)})
+
 def _heir_repositories(module_ctx):
-    heir_repos()
+    nightly = False
+    for mod in module_ctx.modules:
+        for tag in mod.tags.config:
+            if tag.nightly:
+                nightly = True
+    heir_repos(nightly = nightly)
     return module_ctx.extension_metadata(
-        reproducible = True,
+        reproducible = not nightly,
         root_module_direct_deps = "all",
         root_module_direct_dev_deps = [],
     )
 
 heir_repositories = module_extension(
     implementation = _heir_repositories,
+    tag_classes = {"config": heir_config},
 )
 
 def local_heir_repo(module_ctx):

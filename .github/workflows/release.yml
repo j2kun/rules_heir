@@ -42,6 +42,17 @@ jobs:
             exit 1
           fi
 
+      - name: Verify Version in REAMDE.md
+        run: |
+          TAG_NAME="${{ steps.get_tag.outputs.TAG }}"
+          # Strip leading 'v' if present
+          VERSION="${TAG_NAME#v}"
+          echo "Checking if README.md contains updated version: $VERSION"
+          if ! grep -E 'version\s*=\s*"'${VERSION}'"' README.md; then
+            echo "ERROR: Version in README.md does not match tag $TAG_NAME (expected $VERSION)"
+            exit 1
+          fi
+
       - name: Create Stable Archive
         run: |
           TAG_NAME="${{ steps.get_tag.outputs.TAG }}"

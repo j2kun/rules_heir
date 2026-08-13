@@ -31,6 +31,8 @@ def heir_openfhe_lib(
         pybind_target_name = None,
         heir_opt_flags = [],
         heir_translate_flags = [],
+        externalize_constants = True,
+        ext_const_output_dir = "",
         data = [],
         tags = [],
         deps = [],
@@ -72,6 +74,8 @@ def heir_openfhe_lib(
       pybind_target_name: The name of the generated pybind_extension target
       heir_opt_flags: Flags to pass to heir-opt before heir-translate
       heir_translate_flags: Flags to pass to heir-translate
+      externalize_constants: If True, externalize constants.
+      ext_const_output_dir: If set, externalize constants to this directory.
       data: Data dependencies to be passed to heir_opt
       tags: Tags to pass to cc_test and cc_library
       deps: Deps to pass to cc_test and cc_library
@@ -110,13 +114,15 @@ def heir_openfhe_lib(
     if not pybind_target:
         pybind_target = "_heir_%s" % name
 
-    if heir_opt_flags:
+    if heir_opt_flags or externalize_constants:
         heir_opt(
             name = heir_opt_name,
             src = mlir_src,
             passes = heir_opt_flags,
             generated_filename = generated_heir_opt_name,
             data = data,
+            externalize_constants = externalize_constants,
+            ext_const_output_dir = ext_const_output_dir,
         )
     else:
         generated_heir_opt_name = mlir_src
@@ -183,13 +189,17 @@ def heir_openfhe_lib(
         generated_filename = generated_lib_header,
     )
 
+    cc_lib_data = data
+    if heir_opt_flags or externalize_constants:
+        cc_lib_data = data + [":" + heir_opt_name]
+
     cc_library(
         name = cc_lib_target,
         srcs = [generated_cc_filename],
         hdrs = [generated_lib_header],
         deps = deps + ["@openfhe//:pke"],
         tags = tags,
-        data = data,
+        data = cc_lib_data,
         copts = cc_lib_copts,
         linkopts = cc_lib_linkopts,
         **kwargs

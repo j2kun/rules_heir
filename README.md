@@ -7,7 +7,7 @@ Bazel rules for the [HEIR](https://github.com/google/heir) compiler.
 Add the following to your `MODULE.bazel`:
 
 ```starlark
-bazel_dep(name = "rules_heir", version = "0.1.1")
+bazel_dep(name = "rules_heir", version = "0.1.2")
 ```
 
 ## Supported Platforms
